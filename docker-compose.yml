@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Backend (API .NET 8)
+  backend:
+    build: 
+      context: ./Backend/DirectorioAPI  # Directorio donde está el Dockerfile del backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Expone el puerto 8080 en tu máquina local para la API
+    networks:
+      - backend_network
+    depends_on:
+      - db  # Espera que la base de datos esté lista
+
+  # Frontend (HTML, CSS, JS)
+  frontend:
+    build: 
+      context: ./Frontend  # Directorio donde está el Dockerfile del frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # Expone el puerto 3000 para el frontend
+    networks:
+      - backend_network
+    depends_on:
+      - backend  # Se asegura de que el backend esté disponible antes
+
+  # Base de datos SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y  # Acepta los términos de la licencia de SQL Server
+      - SA_PASSWORD=Sa123456*  # Establece una contraseña segura para el usuario 'sa'
+    ports:
+      - "1433:1433"  # Expone el puerto 1433 para SQL Server
+    volumes:
+      - sql_data:/var/opt/mssql  # Define un volumen para persistir los datos de la BD
+    networks:
+      - backend_network
+
+volumes:
+  sql_data:  # El volumen que almacena los datos de la base de datos
+  
+networks:
+  backend_network:  # Define una red para que los servicios se comuniquen
+    driver: bridge
+
