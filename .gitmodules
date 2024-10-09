@@ -1,0 +1,6 @@
+[submodule "Backend"]
+	path = Backend
+	url = https://github.com/Cesar920526/Backend-Prueba-Tecnica.git
+[submodule "Frontend"]
+	path = Frontend
+	url = https://github.com/Cesar920526/Frontend-Prueba-Tecnica.git
